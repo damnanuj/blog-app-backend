@@ -10,6 +10,10 @@ const authRouter = require("./routers/authRouter")
  
 const PORT =process.env.PORT
 
+// Middlewares
+app.use(express.json()); //body parser json format POSTMAN
+app.use(express.urlencoded({ extended: true })); //body parser url
+
 //  /auth/login
 //  /auth/register
 app.use("/auth", authRouter)

@@ -5,22 +5,22 @@ const loginController = (req, res) => {
   res.send("Login api is working");
 };
 
-
-const registerController =async (req, res) => {
+const registerController = async (req, res) => {
   console.log("register Working");
-  const {name, username, email,passowrd} = req.body;
 
-  // data Validation 
+  const { name, username, email, password } = req.body;
+
+  // data Validation
   try {
-    await userDataValidation({name, username, email,passowrd})
+    await userDataValidation({ name, username, email, password });
   } catch (error) {
     res.send({
-      status:400,
-      message:error,
-      error:error
-    })
+      status: 400,
+      message: error,
+      error: error,
+    });
   }
   res.send("Register api is working");
 };
 
-module.exports ={loginController, registerController}
+module.exports = { loginController, registerController };

@@ -8,7 +8,7 @@ const regexPatterns = {
     password: /^(?=.*[a-z])(?=.*[A-Z])[A-Za-z]{8,}$/,
   };
 
-const userDataValidation = ({name, username,email, passowrd})=>{
+const userDataValidation = ({name, username,email, password})=>{
     return new Promise((resolve, reject) => {
         name = name && name.trim();
         username = username && username.trim();
