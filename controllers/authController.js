@@ -1,10 +1,11 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const { userDataValidation } = require("../utills/authUtill");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 // Login api controller
 const loginController = async (req, res) => {
-  console.log("Login working");
   const { loginId, password } = req.body;
   // console.log(req.body);
   if (!loginId || !password) {
@@ -32,7 +33,7 @@ const loginController = async (req, res) => {
       email: userDb.email,
       userId: userDb._id,
     };
-
+    console.log("User login successfully");
     return res.send({
       status: 200,
       message: "User login successfully",
@@ -80,27 +81,56 @@ const registerController = async (req, res) => {
     });
   }
 };
+
 // Logout Controller
-const logoutController = (req,res)=>{
-  req.session.destroy((error)=>{
-    if(error){
+const logoutController = (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
       return res.send({
-        status:500,
-        message:"Unable to logout"
-      })
+        status: 500,
+        message: "Unable to logout",
+      });
     }
 
     return res.send({
-      status:200,
-      message:"Logout successfull"
-    })
-  })
-}
+      status: 200,
+      message: "Logout successfull",
+    });
+  });
+};
 
 // Logout alldevices controller
+const logoutAllDeviceController = async (req, res) => {
+  const userId = req.session.user.userId;
 
-const logoutAllDeviceController = (req,res)=>{
-  res.send("Logout all working")
-}
+  //create a session schema
+  const sessionSchema = new Schema({ _id: String }, { strict: false });
+  //convert it into model
+  const sessionModel = mongoose.model("session", sessionSchema);
+  //mongoose query to delete all the related entries
+  try {
+    const deletedSessions = await sessionModel.deleteMany({
+      "session.user.userId": userId,
+    });
+    console.log("Line 115", deletedSessions);
+    res.send({
+      status: 200,
+      message: `Logout from ${deletedSessions.deletedCount} devices successfull`,
+    });
+  } catch (error) {
+    return res.send({
+      status: 500,
+      message: "Internal server error",
+      error: error,
+    });
+  }
+  console.log("Logout from all devices successfull");
+};
 
-module.exports = { loginController, registerController ,logoutController, logoutAllDeviceController};
+
+module.exports = {
+  loginController,
+  registerController,
+  logoutController,
+  logoutAllDeviceController,
+};

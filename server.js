@@ -7,6 +7,8 @@ const mongodbSession = require('connect-mongodb-session')(session)
 
 //file imports
 const authRouter = require("./routers/authRouter")
+const blogRouter = require("./routers/blogRouter")
+const isAuth = require("./middlewares/isAuthMiddleware")
 
 
 const PORT =process.env.PORT
@@ -28,9 +30,11 @@ app.use(session({
     saveUninitialized : false
 }))
 
-//  /auth/login
-//  /auth/register
+//  /auth/login => /auth/register
 app.use("/auth", authRouter)
+app.use("/blog", isAuth, blogRouter)
+
+
 // app.get("/",(req,res)=>{
 //     res.send("Server is running")
 // })
