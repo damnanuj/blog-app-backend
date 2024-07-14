@@ -60,7 +60,7 @@ This project is a backend for a blog application written in Node.js. It includes
  ```bash
  POST /auth/register
    ```
- `**body:**
+ **body:**
 
    ```json
   {
