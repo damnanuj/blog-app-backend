@@ -1,6 +1,6 @@
-# Project Name
+# Blog App Backend
 
-A brief description of what your project does and its purpose.
+This project is a backend for a blog application written in Node.js. It includes a set of APIs for creating users, logging in, creating blogs, deleting blogs etc... and managing sessions with token-based authentication. The project uses MongoDB Atlas for storing users, blogs, and session data.
 
 ## Table of Contents
 
