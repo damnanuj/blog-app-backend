@@ -9,7 +9,6 @@ const createBlog = async ({ title, textBody, userId }) => {
       creationDateTime: Date.now(),
     });
     console.log(blogObj);
-
     try {
       const blogDb = await blogObj.save();
       resolve(blogDb);

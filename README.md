@@ -40,35 +40,34 @@ A brief description of what your project does and its purpose.
    ```bash
    npm start
 
-6. **Usage**
-Starting the server:
+## Usage 
+1. **Starting the server:**
 
-```bash
+   ```bash
+   npm start
+   ```
+2. **Access the API:**
+ 
+    *The API will be accessible at http://localhost:8000*
 
-npm start
-```
-Access the API:
-The API will be accessible at http://localhost:3000
+## API Endpoints
 
-API Endpoints
-User Endpoints
-Get All Users
+### User Endpoints
+- register user
 
-bash
-Copy code
-GET /api/users
-Response:
+   ```bash
+   POST /auth/register
+   ```
+**body:**
 
-json
-Copy code
-[
+   ```json
   {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  ...
-]
+     "name":"Harry Potter",
+     "username":"harry",
+     "email":"harry@gmail.com",
+     "password":"Harrypotter"
+  } 
+   ```
 Get User by ID
 
 bash
