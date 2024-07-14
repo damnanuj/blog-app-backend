@@ -13,38 +13,40 @@ A brief description of what your project does and its purpose.
 ## Installation
 
 1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/damnanuj/blog-app-backend.git
+  ```bash
+  git clone https://github.com/damnanuj/blog-app-backend.git
+```
 2. **Navigate to the project directory:**
 
-   ```bash
-   cd yourproject
-    ```
-3. **Install dependencies:**
-   ```bash
-   npm install
+  ```bash
+  cd yourproject
    ```
+3. **Install dependencies:**
+ ```bash
+ npm install
+  ```
 
 4. **Set up environment variables:**
 
    *Create a .env file in the root directory and add the necessary configuration 
     variables. For example:*
-   ```bash
-   PORT=8000
-   MONGO_URI=your mongo uri
-   SALT=salt
-   SECRET_KEY=your-databse secret key
-     ```
+  ```bash
+  PORT=8000
+  MONGO_URI=your mongo uri
+  SALT=salt
+  SECRET_KEY=your-database secret key
+  ```
 5. **Run the server:**
 
-   ```bash
-   npm start
+ ```bash
+ npm start
+```
 
 ## Usage 
 1. **Starting the server:**
 
-   ```bash
-   npm start
+  ```bash
+  npm start
    ```
 2. **Access the API:**
  
@@ -55,10 +57,10 @@ A brief description of what your project does and its purpose.
 ### User Endpoints
 - register user
 
-   ```bash
-   POST /auth/register
+ ```bash
+ POST /auth/register
    ```
-**body:**
+ `**body:**
 
    ```json
   {
@@ -68,6 +70,27 @@ A brief description of what your project does and its purpose.
      "password":"Harrypotter"
   } 
    ```
+
+- login user
+
+ ```bash
+ POST /auth/login
+   ```
+**body:**
+
+   ```json
+  {
+     "username":"harry",
+     "password":"Harrypotter"
+  }    
+  ```
+   - *user can login with username or email*
+   ```json
+  {
+     "email":"harry@gmail.com",
+     "password":"Harrypotter"
+  }    
+  ```
 Get User by ID
 
 bash
