@@ -18,4 +18,10 @@ const createBlog = async ({ title, textBody, userId }) => {
   });
 };
 
-module.exports = { createBlog };
+const getAllBlogs =({SKIP}) =>{
+  return new Promise((resolve,reject)=>{
+    resolve()
+  })
+}
+
+module.exports = { createBlog ,getAllBlogs};

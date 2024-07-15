@@ -1,5 +1,6 @@
-const { createBlog } = require("../models/blogModel");
 const { blogDataValidator } = require("../utills/blogUtills");
+
+const { createBlog, getAllBlogs } = require("../models/blogModel");
 
 const createBlogController = async (req, res) => {
   const { title, textBody } = req.body;
@@ -16,7 +17,7 @@ const createBlogController = async (req, res) => {
     });
   }
 
-//   Sending data to createblog Model Controller to save in Db
+  //   Sending data to createblog Model Controller to save in Db
   try {
     const blogDb = await createBlog({ title, textBody, userId });
     return res.send({
@@ -31,7 +32,28 @@ const createBlogController = async (req, res) => {
       error: error,
     });
   }
-
 };
 
-module.exports = { createBlogController };
+//get all blogs
+
+const getBlogsController = async (req, res) => {
+  const SKIP = req.query.skip || 0;
+
+  try {
+    const blogsDb = await getAllBlogs({ SKIP });
+
+    return res.send({
+      status: 200,
+      message: "Read allblogs successfull",
+      data: blogsDb,
+    });
+  } catch (error) {
+    return res.send({
+      status: 500,
+      message: "Internal sever error",
+      error: error,
+    });
+  }
+};
+
+module.exports = { createBlogController, getBlogsController };
