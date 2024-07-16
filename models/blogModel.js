@@ -18,10 +18,19 @@ const createBlog = async ({ title, textBody, userId }) => {
   });
 };
 
-const getAllBlogs =({SKIP}) =>{
-  return new Promise((resolve,reject)=>{
-    resolve()
-  })
-}
+const getAllBlogs = ({ SKIP }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const blogDb = await blogSchema.aggregate([
+        {
+          $sort: { creationDateTime: -1 }, //-1 DESC, +1 ASCD
+        },
+      ]);
+      resolve(blogDb);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
-module.exports = { createBlog ,getAllBlogs};
+module.exports = { createBlog, getAllBlogs };
