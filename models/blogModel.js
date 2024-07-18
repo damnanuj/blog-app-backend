@@ -1,6 +1,7 @@
 const { LIMIT } = require("../privateConstants");
 const blogSchema = require("../schemas/blogSchema");
 
+// ========  create Blog ========
 const createBlog = async ({ title, textBody, userId }) => {
   return new Promise(async (resolve, reject) => {
     const blogObj = new blogSchema({
@@ -19,6 +20,7 @@ const createBlog = async ({ title, textBody, userId }) => {
   });
 };
 
+// ========  Get all Blogs ========
 const getAllBlogs = ({ SKIP }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -40,6 +42,7 @@ const getAllBlogs = ({ SKIP }) => {
   });
 };
 
+// ========  Get only Users Blogs ========
 const getmyBlogs = ({ userId, SKIP }) => {
   return new Promise(async (resolve, reject) => {
     //match based on only user blogs > sort >pagination
@@ -66,6 +69,7 @@ const getmyBlogs = ({ userId, SKIP }) => {
   });
 };
 
+// ========  find a blog with Blog Id ========
 const getBlogWithId = ({ blogId }) => {
   return new Promise(async (resolve, reject) => {
   

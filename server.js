@@ -9,6 +9,7 @@ const mongodbSession = require('connect-mongodb-session')(session)
 const authRouter = require("./routers/authRouter")
 const blogRouter = require("./routers/blogRouter")
 const isAuth = require("./middlewares/isAuthMiddleware")
+const followRouter = require("./routers/followRouter")
 
 
 const PORT =process.env.PORT
@@ -33,6 +34,7 @@ app.use(session({
 //  /auth/login => /auth/register
 app.use("/auth", authRouter)
 app.use("/blog", isAuth, blogRouter)
+app.use("/follow", isAuth, followRouter)
 
 
 // app.get("/",(req,res)=>{

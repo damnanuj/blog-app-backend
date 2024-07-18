@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const userSchema = require("../schemas/userSchema");
-
+const { ObjectId } = require("mongodb");
 const User = class {
   constructor({ email, name, username, password }) {
     this.email = email;
@@ -17,15 +17,18 @@ const User = class {
           $or: [{ email: this.email }, { username: this.username }],
         });
 
-        if ((userExist && userExist.username === this.username) 
-            && (userExist && userExist.email === this.email))
-            reject("Username & Email both already exist");
+        if (
+          userExist &&
+          userExist.username === this.username &&
+          userExist &&
+          userExist.email === this.email
+        )
+          reject("Username & Email both already exist");
 
         if (userExist && userExist.email === this.email)
           reject("Email already exist");
         if (userExist && userExist.username === this.username)
           reject("Username already exist");
-        
 
         const hashedPassword = await bcrypt.hash(
           this.password,
@@ -47,12 +50,18 @@ const User = class {
     });
   }
 
-  static findUserWithLoginId({ loginId }) {
+  static findUserWithKey({ key }) {
     return new Promise(async (resolve, reject) => {
+    
       try {
+        if (!key) reject("Key is missing");
         const userDb = await userSchema
           .findOne({
-            $or: [{ username: loginId }, { email: loginId }],
+            $or: [
+              //if the key is userId then search with _id else match other
+              ObjectId.isValid(key) ? { _id: key } : { username: key },
+              { email: key },
+            ],
           })
           .select("+password");
 

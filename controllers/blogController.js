@@ -117,12 +117,21 @@ const editBlogController = async (req, res) => {
         message: "You are not allowed to edit",
       });
     }
+   //time is stored in ms in db 
+    const timeDiff = (Date.now()-blogDb.creationDateTime)/(1000 *60);
+    if(timeDiff>30){
+      return res.send({
+        status: 400,
+        message: "Oopss ! can't edit after 30 mins of creation"
+      })
+    }
+
     //update/edit the blog
-    const blogPrevDb = await editBlog({ title, textBody, blogId });
+    // const blogPrevDb = await editBlog({ title, textBody, blogId });
     return res.send({
       status: 200,
       message: "Blog edited successfully",
-      data: blogPrevDb,
+      data: "blogPrevDb",
     });
   } catch (error) {
     return res.send({
