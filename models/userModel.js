@@ -51,6 +51,7 @@ const User = class {
   }
 
   static findUserWithKey({ key }) {
+    console.log(key);
     return new Promise(async (resolve, reject) => {
     
       try {

@@ -49,9 +49,6 @@ const getFollowingList = ({ followerUserId, SKIP }) => {
 
      const followingUserDetails= await userSchema.find({_id: { $in: followingUserIdsArray },});
       // console.log(followingUserDetails);
-
-
-
       resolve(followingUserDetails.reverse());
     } catch (error) {
       reject(error);
@@ -97,4 +94,16 @@ const getFollowerList = ({ followingUserId, SKIP }) => {
   });
 };
 
-module.exports = { followUser, getFollowingList, getFollowerList };
+
+const unfollowUser = ({followerUserId,followingUserId})=>{
+  return new Promise(async(resolve,reject)=>{
+    try {
+     const deletedDb = await followSchema.findOneAndDelete({followerUserId,followingUserId})
+     resolve(deletedDb)
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+module.exports = { followUser, getFollowingList, getFollowerList,unfollowUser };

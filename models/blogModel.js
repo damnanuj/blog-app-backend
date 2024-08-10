@@ -26,6 +26,9 @@ const getAllBlogs = ({ SKIP }) => {
     try {
       const blogDb = await blogSchema.aggregate([
         {
+          $match:{isDeleted:{$ne:true}}
+        },
+        {
           $sort: { creationDateTime: -1 }, //-1 DESC, +1 ASCD
         },
         {
@@ -50,7 +53,7 @@ const getmyBlogs = ({ userId, SKIP }) => {
     try {
       const myblogsDb = await blogSchema.aggregate([
         {
-          $match: { userId: userId },
+          $match: { userId: userId , isDeleted:{$ne:true} },
         },
         {
           $sort: { creationDateTime: -1 },
@@ -72,7 +75,6 @@ const getmyBlogs = ({ userId, SKIP }) => {
 // ========  find a blog with Blog Id ========
 const getBlogWithId = ({ blogId }) => {
   return new Promise(async (resolve, reject) => {
-  
     try {
       if (!blogId) {
         reject("Blog id is missing");
@@ -83,7 +85,7 @@ const getBlogWithId = ({ blogId }) => {
       }
       resolve(blogDb);
     } catch (error) {
-      reject(error)
+      reject(error);
     }
   });
 };
@@ -107,7 +109,11 @@ const editBlog = ({ title, textBody, blogId }) => {
 const deleteBlog = ({ blogId }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const deletedBlogDb = await blogSchema.findOneAndDelete({ _id: blogId });
+      // const deletedBlogDb = await blogSchema.findOneAndDelete({ _id: blogId });
+      const deletedBlogDb = await blogSchema.findOneAndUpdate(
+        { _id: blogId },
+        { isDeleted: true, deletionDateTime: Date.now() }
+      );
       resolve(deletedBlogDb);
     } catch (error) {
       reject(error);
@@ -121,5 +127,5 @@ module.exports = {
   getmyBlogs,
   getBlogWithId,
   editBlog,
-  deleteBlog
+  deleteBlog,
 };

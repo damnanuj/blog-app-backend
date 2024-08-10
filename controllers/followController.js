@@ -1,7 +1,13 @@
 const User = require("../models/userModel");
 
-const { followUser, getFollowingList, getFollowerList } = require("../models/followModel");
+const {
+  followUser,
+  getFollowingList,
+  getFollowerList,
+  unfollowUser,
+} = require("../models/followModel");
 
+// ===============follow user=================
 const followController = async (req, res) => {
   const followingUserId = req.body.followingUserId;
   const followerUserId = req.session.user.userId;
@@ -63,8 +69,7 @@ const getfollowingListController = async (req, res) => {
   }
 };
 
-
-
+//============== follower list controller
 const getfollowerListController = async (req, res) => {
   //followingUserId => jiske followers hain
   const followingUserId = req.session.user.userId;
@@ -86,6 +91,36 @@ const getfollowerListController = async (req, res) => {
   }
 };
 
+// ===============Unfollow user=================
+const unfollowController = async (req, res) => {
+  const followingUserId = req.body.followingUserId;
+  const followerUserId = req.session.user.userId;
 
+  try {
+    const unfollowedUserDb = await unfollowUser({
+      followerUserId,
+      followingUserId,
+    });
 
-module.exports = { followController, getfollowingListController,getfollowerListController };
+   
+
+    return res.send({
+      status: 200,
+      message: "Unfollow successfull",
+      data: unfollowedUserDb,
+    });
+  } catch (error) {
+    return res.send({
+      status: 500,
+      message: "Internal sever error",
+      error: error,
+    });
+  }
+};
+
+module.exports = {
+  followController,
+  getfollowingListController,
+  getfollowerListController,
+  unfollowController,
+};
