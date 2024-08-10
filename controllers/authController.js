@@ -41,8 +41,7 @@ const loginController = async (req, res) => {
   } catch (error) {
     return res.send({
       status: 500,
-      message: "Internal server error",
-      error: error,
+      message: error,
     });
   }
 };
