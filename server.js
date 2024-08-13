@@ -11,6 +11,7 @@ const blogRouter = require("./routers/blogRouter");
 const isAuth = require("./middlewares/isAuthMiddleware");
 const followRouter = require("./routers/followRouter");
 const cleanUpBin = require("./cron");
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT;
 const app = express();
@@ -28,7 +29,7 @@ const store = new mongodbSession({
 // middlewares
 app.use(express.json()); //body parser json format POSTMAN
 app.use(express.urlencoded({ extended: true })); //body parser url
-
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SECRET_KEY,

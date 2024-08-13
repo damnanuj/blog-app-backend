@@ -3,48 +3,9 @@ const User = require("../models/userModel");
 const { userDataValidation } = require("../utills/authUtill");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const jwt = require("jsonwebtoken");
 
-// Login api controller
-const loginController = async (req, res) => {
-  const { loginId, password } = req.body;
-  // console.log(req.body);
-  if (!loginId || !password) {
-    return res.send({
-      status: 400,
-      message: "Missing user credentials",
-    });
-  }
-  //find the user
-  try {
-    const userDb = await User.findUserWithKey({ key:loginId });
-    // console.log(userDb);
-    //compare the password
-    // const isPassMatched = await bcrypt.compare(password, userDb.password)
-    const isPassMatched = password === userDb.password;
-    if (!isPassMatched) {
-      return res.send({
-        status: 400,
-        message: "Incorrect Passoword",
-      });
-    }
-    req.session.isAuth = true;
-    req.session.user = {
-      username: userDb.username,
-      email: userDb.email,
-      userId: userDb._id,
-    };
-    console.log("User login successfully");
-    return res.send({
-      status: 200,
-      message: "User login successfully",
-    });
-  } catch (error) {
-    return res.send({
-      status: 500,
-      message: error,
-    });
-  }
-};
+
 
 // Registration api controller
 const registerController = async (req, res) => {
@@ -57,7 +18,7 @@ const registerController = async (req, res) => {
   } catch (error) {
     res.send({
       status: 400,
-      message: error,
+      message: error.message,
       error: error,
     });
   }
@@ -67,9 +28,17 @@ const registerController = async (req, res) => {
   try {
     const userDb = await obj.registerUser();
 
+    // Generate JWT Token
+    const token = jwt.sign(
+      { id: userDb._id, username: userDb.username },
+      process.env.SECRET_KEY,
+      { expiresIn: "24" }
+    );
+
     return res.send({
       status: 201,
       message: "User registered successfully",
+      token: token,
       data: userDb,
     });
   } catch (error) {
@@ -81,22 +50,70 @@ const registerController = async (req, res) => {
   }
 };
 
-// Logout Controller
-const logoutController = (req, res) => {
-  req.session.destroy((error) => {
-    if (error) {
-      return res.send({
-        status: 500,
-        message: "Unable to logout",
+// Login api controller
+const loginController = async (req, res) => {
+  const { loginId, password } = req.body;
+
+  if (!loginId || !password) {
+    return res.status(400).send({
+      message: "Missing user credentials",
+    });
+  }
+
+  try {
+    const user = await User.findUserWithKey({ key: loginId });
+
+    if (!user) {
+      return res.status(400).send({
+        message: "Invalid username or password",
       });
     }
 
+    const isPassMatched = password === user.password; 
+    //TODO: Replace with bcrypt.compare for security
+
+    if (!isPassMatched) {
+      return res.status(400).send({
+        message: "Invalid username or password",
+      });
+    }
+
+    // Generate JWT Token
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.SECRET_KEY,
+      { expiresIn: "24h" }
+    );
+
+    console.log("User login successfully");
+
     return res.send({
       status: 200,
-      message: "Logout successfull",
+      message: "User login successfully",
+      token: token,
     });
+  } catch (error) {
+    return res.send({
+      status: 500,
+      message: "Internal server error",
+      error: error,
+    });
+  }
+};
+
+
+const logoutController = (req, res) => {
+  // Clear the JWT cookie
+  res.clearCookie('token');
+
+  return res.status(200).send({
+    status: 200,
+    message: "Logout successful",
   });
 };
+
+module.exports = logoutController;
+
 
 // Logout alldevices controller
 const logoutAllDeviceController = async (req, res) => {
@@ -125,7 +142,6 @@ const logoutAllDeviceController = async (req, res) => {
   }
   console.log("Logout from all devices successfull");
 };
-
 
 module.exports = {
   loginController,
