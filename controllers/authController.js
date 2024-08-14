@@ -22,7 +22,6 @@ const registerController = async (req, res) => {
       error: error,
     });
   }
-
   //store user data
   const obj = new User({ name, email, username, password });
   try {
@@ -32,7 +31,7 @@ const registerController = async (req, res) => {
     const token = jwt.sign(
       { id: userDb._id, username: userDb.username },
       process.env.SECRET_KEY,
-      { expiresIn: "24" }
+      { expiresIn: "24h" }
     );
 
     return res.send({
